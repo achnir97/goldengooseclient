@@ -1,22 +1,38 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-function RegistrationForm() {
+
+
+const RegistrationForm=() =>{
+ 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [numberofGoose, setGoose] = useState('');
+  const [date, setDate] = useState('');
+  const [loggedin, setLogged]=useState(false)
+  
+  
+  const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+
+
+const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ firstName, lastName, email, password }),
+      const response = await axios.post('http://localhost:8080/register', {
+        firstName,
+        lastName,
+        email,
+        password,
+        date,
+        numberofGoose
       });
-      if (response.ok) {
+      if (response.status === 200) {
+         setLogged(true)
+         loggedin?(navigate("/client")):<p> YOu cannot logged in</p>
         // registration successful
         console.log('Registration successful');
       } else {
@@ -26,9 +42,11 @@ function RegistrationForm() {
     } catch (error) {
       console.error(error);
     }
-  };
+};
+
 
   return (
+    <div>
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="firstName">First Name:</label>
@@ -66,8 +84,31 @@ function RegistrationForm() {
           onChange={(event) => setPassword(event.target.value)}
         />
       </div>
-      <button type="submit">Register</button>
+      <div>
+        <label htmlFor="Date">Date:</label>
+        <input
+          type="date"
+          id="date"
+          value={date}
+          onChange={(event) => setDate(event.target.value)}
+        />
+      </div>
+      <div>
+        <label htmlFor="Number">Number of Goose Invested:</label>
+        <input
+          type="number"
+          id="number"
+          value={numberofGoose}
+          onChange={(event) => setGoose(event.target.value)}
+        />
+      </div>
+  
+
+
+      <button type="submit">SignUp</button>
     </form>
+   </div>
+   
   );
 }
 
