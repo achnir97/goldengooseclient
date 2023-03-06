@@ -1,12 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { Navigate, useNavigate } from 'react-router-dom';
-function Signin() {
-  const [email, setEmail] = useState('');
+import { useNavigate } from 'react-router-dom';
+import { TestContext } from './context';
+
+const Signin=()=> {
+  
+  const {email, setEmailHandler} = useContext(TestContext)
   const [password, setPassword] = useState('');
-  const navigate=useNavigate()
+  const [Numbergoose, setNumberOfGoose]=useState(0)
+  const {isLogged, setLoginHandler}=useContext(TestContext)
 
+  
+const navigate=useNavigate()
+  
 
+const fetchingdata = async(event)=>{
+   event.preventDefault();
+   try {
+    const response=await axios.get(`http://localhost:8080/calculate/{email}`,{
+        withCredentials:true
+    });
+    if (response.status===200){
+        setNumberOfGoose(response.data.Numbergoose)
+  
+    }
+   } catch (error) {
+        console.log("You could'not set the id", error)
+   }
+}
 
 const handleSubmit = async (event) => {
     event.preventDefault();
@@ -17,8 +38,12 @@ const handleSubmit = async (event) => {
         password
       });
       if (response.status === 200) {
-        console.log('You are sucessfully logged in');
+        setLoginHandler(true)
         navigate("/client")
+        console.log('You are sucessfully logged in');
+
+        
+        
         } else {
         // registration failed
         console.error('Error occured in Loginn Process. Try it again.');
@@ -30,7 +55,11 @@ const handleSubmit = async (event) => {
 };
 
 
+
   return (
+    <>
+      <h1> YOO!!! GOLDENGOOSE FARM LAND </h1>
+      <h1>  MAKE YOUR GOOSE LAY GOLLDEN EGGS.!!! </h1>
     <form onSubmit={handleSubmit}>
     
       <div>
@@ -39,9 +68,10 @@ const handleSubmit = async (event) => {
           type="email"
           id="email"
           value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          onChange={(event) => setEmailHandler(event.target.value)}
         />
       </div>
+      <br></br>
       <div>
         <label htmlFor="password">Password:</label>
         <input
@@ -51,8 +81,11 @@ const handleSubmit = async (event) => {
           onChange={(event) => setPassword(event.target.value)}
         />
       </div>
-      <button type="submit">Signin</button>
+      <br></br>
+      <button type="submit">SignIn</button>
     </form>
+   
+    </>
   );
 }
 

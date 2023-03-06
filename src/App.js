@@ -6,25 +6,25 @@ import RegistrationForm from './signup';
 import Client from './client';
 import {Route, BrowserRouter, Routes,useNavigate } from 'react-router-dom';
 import Signin from './signin';
+import TestContextProvider, { TestContext } from './context';
+import { useContext } from 'react';
+import ClientHandle from './clienthandler';
+import ShowtotalNumberofgoose from './goosecount';
 
 function App() {
-  const navigate=useNavigate()
+ 
+  const {isLogged,setLoginHandler}=useContext(TestContext)
   
-  const HandleClick=()=>{
-    navigate("/login");
-  }
   return (
     <div>
-     
      <Routes>
      <Route path="/" element={<SignUp/>} />
      <Route path="/login" element={<Signin/>}/> 
-     <Route path="/Client" element={<Client/>}/> 
+     <Route path="/Client" element={<ClientHandle/>}/>
+     <Route path="/gooseCount" element={<ShowtotalNumberofgoose/>}/>
      </Routes>
-     <button onClick={HandleClick}>Go to login Page</button>
-     </div>
+     </div>    
   );
 }
 
 export default App;
-
